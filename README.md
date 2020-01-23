@@ -1,2 +1,2 @@
 # CS552 Tutorial
-by Kyle M.
+by Kyle May
