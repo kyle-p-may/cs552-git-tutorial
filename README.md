@@ -6,10 +6,13 @@ This is not an exhaustive tutorial of git, as there are many features that
 are intricate (and extremely useful).
 It is left up to you to explore more of the features to find what you can use to
 make your life easier.
+At first, git will slow down your development; however, learning how to develop and collaborate effectively is a part of becoming a better engineer, so you should learn this now.
 This tutorial can be broken into the following parts:
 
 1. Conceptual Overview
 2. Example and Typical Workflow
+3. Tips and Tricks
+4. Advice
 
 ## Conceptual Overview of git
 git is a Version Control System
@@ -226,6 +229,34 @@ An example of this is as follows:
 ![Branch merge](https://github.com/kyle-p-may/cs552-git-tutorial/blob/master/figures/branch_merge.png)
 
 Again, git will try to automatically fix conflicts but you might have to resolve them similar to how we fixed the conflicting commits in the example.
+
+## Tips and Tricks
+Here we compiled some interesting features of git that you could potentially use to be more efficient.
+
+### .gitignore
+This file describes which files you do not want git to track.
+For example, you could add your work directory to this so you do not accidentally track things you do not care about.
+Read more about this feature [here](https://help.github.com/en/github/using-git/ignoring-files).
+
+### Configure the default editor for git
+Sometimes git will automatically open an editor so you can edit logs.
+If you are not familiar with the default, this can confusing.
+An example of setting the editor to vim is as follows (run in command line):
+`git config --global core.editor vim`
+
+### git hooks
+git provides a system in which you can automatically run scripts before certain key events (e.g. committing).
+These are called hooks.
+An example use case would be a script that checks that all code compiles successfully before allowing a commit (because no one likes code that doesn't compile in commits).
+Read more about this feature [here](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks).
+
+### git blame
+So you can figure out who ruined it all.
+Read more [here](https://www.atlassian.com/git/tutorials/inspecting-a-repository/git-blame).
+
+### git submodule
+This feature allows you to nest repositories, and is quite useful when your project depends on another project that is already version-controlled with git.
+Read more [here](https://git-scm.com/book/en/v2/Git-Tools-Submodules).
 
 ## Advice
 This is meant to serve as an introduction to git, and it does not even come close to describing all of its features.
