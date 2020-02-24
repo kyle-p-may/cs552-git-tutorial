@@ -258,6 +258,29 @@ If you are not familiar with the default, this can confusing.
 An example of setting the editor to vim is as follows (run in command line):
 `git config --global core.editor vim`
 
+### git aliases and bash aliases
+I would recommend putting some effort into setting aliases for commonly used commands.
+For example, you will run `git status` very frequently; if you can reduce the amount that you need to type, it is good.
+You can do this with a combination of bash aliases and git aliases.
+For example, in your `~/.bashrc` file, you could add the following line:
+
+`alias g="git"`
+
+After running `source ~/.bashrc` or restarting your terminal, typing the command `g` is the equivalent of typing `git`.
+To run `git status`, you could now run `g status`.
+You can go crazy with customization here.
+
+For git aliases, you can do something similar.
+To set an alias for the status command, you could run
+
+`git config --global alias.st status`
+
+Now, to run `git status`, you can run `git st`.
+Combining with the bash alias, you could run `g st`.
+
+To read more about bash aliases, go [here](https://www.digitalocean.com/community/tutorials/an-introduction-to-useful-bash-aliases-and-functions).
+To read more about git aliases, go [here](https://git-scm.com/book/en/v2/Git-Basics-Git-Aliases).
+
 ### git hooks
 git provides a system in which you can automatically run scripts before certain key events (e.g. committing).
 These are called hooks.
