@@ -56,6 +56,12 @@ We will talk in more detail about this in the example.
 
 ## Example and Typical Workflow
 
+### Generate ssh keys and add them to your GitHub account
+In order to efficiently work with GitHub, you will want to generate an ssh key in order to authenticate quickly.
+Follow the directions [here](https://confluence.atlassian.com/bitbucketserver/creating-ssh-keys-776639788.html) in order to generate one for your system.
+After generating the key, register the public key (typically stored in ~/.ssh/id\_rsa.pub) with GitHub.
+You will need to do this for each of the systems that you work on.
+
 ### Create a single remote repo
 First, we will walk through how to create a remote repo on GitHub, using their web interface.
 As seen in the following figure, there is a button to create a new repo in the top right corner of the website.
@@ -110,7 +116,10 @@ This should be the output of running `git status`. If there are uncommitted chan
 
 then you should proceed to the section about adding and committing changes before continuing.
 
-Once you have a good status, you can run `git pull origin master` in order to get the most up to date code from the remote. In this command, you specify both the specific remote that you are working with (e.g. origin) and the branch on that remote (e.g. master). You can have multiple remote repositories, but you will not need to for the purpose of this class. Branches are a way to manage collaboration, but will not be covered by this tutorial.
+Once you have a good status, you can run `git pull origin master` in order to get the most up to date code from the remote.
+In this command, you specify both the specific remote that you are working with (e.g. origin) and the branch on that remote (e.g. master).
+You can have multiple remote repositories, but you will not need to for the purpose of this class.
+Branches will be covered later in the tutorial.
 
 #### Make changes
 The fun part, write some code.
@@ -126,17 +135,100 @@ After running `git status` in your repo, the output should look something like:
 
 Now, running `git add foo.c` and `git add foo.h` will "stage" this files for commit. Run `git status` again to understand what changed in the repo.
 
-Now, in order to fully commit these changes to the repo (e.g. for the changes to be tracked), you must run `git commit`. The suggested form of the command is as follows: `git commit -m "informative commit message"`. The `-m` option says that you want to specify the commit message (which is how commits are identified) on the command line.
+Now, in order to fully commit these changes to the repo (e.g. for the changes to be tracked), you must run `git commit`.
+The suggested form of the command is as follows: `git commit -m "informative commit message"`.
+The `-m` option says that you want to specify the commit message (which is how commits are identified) on the command line.
+
+A few extra tips here: when checking the status, it is common to forget what specific changes happened to each file.
+You should always understand all of the changes you are adding to a commit; a command that helps is `git diff`.
+`git diff` functions similarly to the Linux utility diff.
+For example, suppose you make some changes to the files `foo.h` and `foo.c`, but you forgot what you did to `foo.c`.
+Running the command `git diff foo.c` will provide the following output, which shows the differences of the file arguments since the last commit.
+
+![Simple diff](https://github.com/kyle-p-may/cs552-git-tutorial/blob/master/figures/simple_diff.png)
+
+Running `git diff` will show all of your changes.
 
 #### Checking status and pushing to remote
 At this point, your repo has local commits that have not been shared with the remote repository.
+Running `git status` will show some a message talking about how your branch is ahead of the remote.
+
+![Unpushed commits](https://github.com/kyle-p-may/cs552-git-tutorial/blob/master/figures/unpushed_commits.png)
 
 In order to save your changes to the remote (and share your changes with your collaborators), run
 
 `git push origin master`
 
-## Advice
-This is meant to serve as an introduction to git, and it does not even come close to describing all of its features. git can produce some odd errors, but searching on google will usually provide a simple solution for errors. Furthermore, you can always reach out to TAs with git questions.
+![Successful Push](https://github.com/kyle-p-may/cs552-git-tutorial/blob/master/figures/suc_push.png)
 
-Most errors are produced because of the synchronization between remote and local repos. When commits conflict, you must manually sort out the differences. Again, searching for how to deal with merge cnflicts would be fruitful.
+The above will be the output on the successful push to the remote. A common error message that you will see at this point will be a merge commit.
+For example, suppose you and your partner work on the same file, and make changes that conflict.
+This code be implementing the same function or changing the same lines of code in a way that git cannot automatically merge them.
+Your partner pushes their changes to the remote before you do.
+In this example, suppose that you both implemented a function `bar` in `foo.c`.
+When performing the command `git push origin master`, you will get an error.
+
+![Failed Push](https://github.com/kyle-p-may/cs552-git-tutorial/blob/master/figures/failed_push.png)
+
+In general, error messages are very descriptive, so read them, or just google them.
+To solve this error, you have to pull in order to get the remote changes to your local repo.
+After pulling, you will receive another error.
+
+![merge conflict 1](https://github.com/kyle-p-may/cs552-git-tutorial/blob/master/figures/pull_conflict.png)
+
+From this error message, git tells you exactly what files from the commit have conflict.
+As seen from the error message, there is a conflict in `foo.c`.
+In order to actually commit your changes, you must go into `foo.c` and sort out the changes.
+Upon opening `foo.c`, you will see the following.
+
+![merge text](https://github.com/kyle-p-may/cs552-git-tutorial/blob/master/figures/merge.png)
+
+The key is that git keeps both versions of the code around, surrounding the code with `<<<..` and `>>>...` and separating the two versions with `===...`.
+Usually, merge conflicts are resolved by picking the version that you want to save and just deleting the other version.
+To signal to git that you fixed the conflict, you follow the same directions for adding a file and commiting.
+You should ***make the commit message descriptive to note what you merged***.
+
+### Branches
+Branches are a way to separate changes to your code base at a higher level than individual commits.
+Commits organize small logical changes, such that other people do not see intermediate changes that show the code base in a non-stable state.
+However, some changes that are not stable might require many commits before being ready to be merged into the main code base.
+For example, suppose that you have an almost fully functioning pipelined processor.
+Adding a cache will be a complicated process that you wouldn't want to do in 1 commit.
+Therefore, you can use a branch to track all of the commits that go into implementing the cache sub-system before merging this with the main branch that is tracking your processor.
+A more detailed description of branches can be found [here](https://git-scm.com/book/en/v2/Git-Branching-Branches-in-a-Nutshell).
+
+#### Creating a branch
+
+In order to use branches, you would use the following command:
+`git branch <name>`
+where you would replace \<name\> with an identifier associated with the branch.
+
+Immediately after running this command, you will be on the same branch as before (most likely master).
+You can check this by running `git status`, and the first line states what branch you are on.
+
+In order to switch branches, you can run
+`git checkout <name>`
+
+For example, let's say I made a branch `kyle-dev`.
+
+![branch](https://github.com/kyle-p-may/cs552-git-tutorial/blob/master/figures/kyle_dev.png)
+
+As seen, `git status` shows that I am on my new branch.
+Now, you can follow the same workflow as before, but now instead of `master` for the branch, I would replace that with `kyle-dev` (e.g. `git pull origin kyle-dev`).
+
+In order to visualize branches and commit histories in general, try the command `git log --graph`.
+
+#### Merging branches
+In order to merge a branch, you should checkout the branch that you want to receive the changes (most of the time `master`).
+Then, you run `git merge <name>`.
+An example of this is as follows:
+
+![Branch merge](https://github.com/kyle-p-may/cs552-git-tutorial/blob/master/figures/branch_merge.png)
+
+Again, git will try to automatically fix conflicts but you might have to resolve them similar to how we fixed the conflicting commits in the example.
+
+## Advice
+This is meant to serve as an introduction to git, and it does not even come close to describing all of its features.
+git can produce some odd errors, but searching on google will usually provide a simple solution for errors.
+Furthermore, you can always reach out to TAs with git questions.
 
