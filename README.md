@@ -136,7 +136,11 @@ After running `git status` in your repo, the output should look something like:
 
 ![add pt 1](https://github.com/kyle-p-may/cs552-git-tutorial/blob/master/figures/add_1.png)
 
-Now, running `git add foo.c` and `git add foo.h` will "stage" this files for commit. Run `git status` again to understand what changed in the repo.
+Now, running `git add foo.c` and `git add foo.h` will "stage" this files for commit.
+Run `git status` again to understand what changed in the repo.
+`git add` signals to git that you intend to commit the changes that you made to the files that you are adding.
+When you commit, you will only save the changes that you signaled to git that you wanted to save.
+This means that you can save changes and decide not save other changes yet.
 
 Now, in order to fully commit these changes to the repo (e.g. for the changes to be tracked), you must run `git commit`.
 The suggested form of the command is as follows: `git commit -m "informative commit message"`.
@@ -148,6 +152,8 @@ You should always understand all of the changes you are adding to a commit; a co
 For example, suppose you make some changes to the files `foo.h` and `foo.c`, but you forgot what you did to `foo.c`.
 Running the command `git diff foo.c` will provide the following output, which shows the differences of the file arguments since the last commit.
 
+`git add` has many different options that can be viewed using `git add -h`; I would google before using any of the other complex arguments.
+
 ![Simple diff](https://github.com/kyle-p-may/cs552-git-tutorial/blob/master/figures/simple_diff.png)
 
 Running `git diff` will show all of your changes.
@@ -157,6 +163,9 @@ At this point, your repo has local commits that have not been shared with the re
 Running `git status` will show some a message talking about how your branch is ahead of the remote.
 
 ![Unpushed commits](https://github.com/kyle-p-may/cs552-git-tutorial/blob/master/figures/unpushed_commits.png)
+
+Before saving any commits to the remote, you should always run `git pull origin master`.
+This will make sure that you have the most up-to-date repo, and it will merge changes between commits in the remote and commits in your local.
 
 In order to save your changes to the remote (and share your changes with your collaborators), run
 
@@ -187,6 +196,7 @@ Upon opening `foo.c`, you will see the following.
 ![merge text](https://github.com/kyle-p-may/cs552-git-tutorial/blob/master/figures/merge.png)
 
 The key is that git keeps both versions of the code around, surrounding the code with `<<<..` and `>>>...` and separating the two versions with `===...`.
+The local version (your most recent commit) is `<<<` -> `===` and the conflicting version would be from `===` to `>>>`.
 Usually, merge conflicts are resolved by picking the version that you want to save and just deleting the other version.
 To signal to git that you fixed the conflict, you follow the same directions for adding a file and commiting.
 You should ***make the commit message descriptive to note what you merged***.
@@ -220,6 +230,10 @@ As seen, `git status` shows that I am on my new branch.
 Now, you can follow the same workflow as before, but now instead of `master` for the branch, I would replace that with `kyle-dev` (e.g. `git pull origin kyle-dev`).
 
 In order to visualize branches and commit histories in general, try the command `git log --graph`.
+
+Furthermore, to list branches, you can run `git branch`. This is useful in order to see which branches you can switch to.
+
+Sometimes, your local repository will not track a branch that was created in another local repo. When trying to switch to this branch using `git checkout`. To fix this, use `git fetch` to synchronize your local repo with the remote repo.
 
 #### Merging branches
 In order to merge a branch, you should checkout the branch that you want to receive the changes (most of the time `master`).
